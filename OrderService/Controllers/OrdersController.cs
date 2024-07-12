@@ -92,6 +92,67 @@ namespace OrderService.Controllers
             return NoContent();
         }
 
+        // Метод для обновления заказа
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOrder(int id, Order order)
+        {
+            // Проверка на корректность входных данных
+            if (id != order.id)
+            {
+                return BadRequest("Order ID mismatch.");
+            }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingOrder = await _context.Orders.FindAsync(id);
+            if (existingOrder == null)
+            {
+                return NotFound();
+            }
+
+            // Обновление полей заказа
+            existingOrder.description = order.description;
+            existingOrder.pickupAddress = order.pickupAddress;
+            existingOrder.deliveryAddress = order.deliveryAddress;
+            existingOrder.comment = order.comment;
+            existingOrder.executor = order.executor;
+            existingOrder.width = order.width;
+            existingOrder.height = order.height;
+            existingOrder.depth = order.depth;
+            existingOrder.weight = order.weight;
+            existingOrder.updatedDate = DateTime.UtcNow;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Добавляем обработку исключения для случая, когда в базе данных изменена запись
+                if (!OrderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return StatusCode(409, "Conflict: The order has been updated or deleted by another user.");
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                // Ловим ошибку обновления базы данных и выводим сообщение
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+            return NoContent();
+        }
+
+        private bool OrderExists(int id)
+        {
+            return _context.Orders.Any(e => e.id == id);
+        }
     }
 }
