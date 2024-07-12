@@ -114,6 +114,7 @@ namespace OrderService.Controllers
             }
 
             // Обновление полей заказа
+            existingOrder.status = order.status;
             existingOrder.description = order.description;
             existingOrder.pickupAddress = order.pickupAddress;
             existingOrder.deliveryAddress = order.deliveryAddress;
