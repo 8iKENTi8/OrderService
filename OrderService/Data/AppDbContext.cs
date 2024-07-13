@@ -10,6 +10,7 @@ namespace OrderService.Data
 
         // DbSet представляет собой набор сущностей Order, которые будут сохранены в таблице Orders
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Executor> Executors { get; set; }  
 
         // Метод для настройки поведения контекста базы данных
         protected override void OnModelCreating(ModelBuilder modelBuilder)

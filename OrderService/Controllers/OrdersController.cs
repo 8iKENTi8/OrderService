@@ -91,6 +91,13 @@ namespace OrderService.Controllers
             return NoContent();
         }
 
+        [HttpGet("executors")]
+        public async Task<ActionResult<IEnumerable<Executor>>> GetExecutors()
+        {
+            return await _context.Executors.ToListAsync();
+        }
+
+
         // Метод для обновления заказа
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
