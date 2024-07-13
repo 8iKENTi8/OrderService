@@ -30,7 +30,6 @@ namespace OrderService.Controllers
                 return BadRequest(ModelState);
             }
 
-            order.createdDate = DateTime.UtcNow;
             order.updatedDate = DateTime.UtcNow;
 
             _context.Orders.Add(order);
